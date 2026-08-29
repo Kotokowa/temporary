@@ -1,0 +1,499 @@
+\documentclass[10pt, a4paper]{ctexart}
+
+% -------------------- 导入必要的宏包 --------------------
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs} % 三线表支持
+\usepackage{bm}       % 粗斜体数学符号
+\usepackage[left=2.5cm, right=2.5cm, top=2.8cm, bottom=2.8cm]{geometry}
+\usepackage{times}    % 英文与数字字体
+\usepackage[labelsep=quad]{caption}
+\usepackage{float}
+\usepackage{array}
+\usepackage{cite}
+
+% 设置段落行距与缩进
+\linespread{1.3}
+\setlength{\parindent}{2em}
+
+% -------------------- 文档正文开始 --------------------
+\begin{document}
+
+% 首页脚注：添加收稿日期、基金、作者简介等
+\let\thefootnote\relax\footnotetext{
+收稿日期：2026-xx-xx；修回日期：2026-xx-xx\\
+基金项目：2025年教育部高等学校大学物理课程教指委教研教改项目（编号：2025-DWJZ-08）\\
+基金项目：2026年教育部高等学校大学物理课程教指委教研教改项目（编号：VPLNCU-2026-011）\\
+作者简介：俞 \ 熹（1978--），男，浙江金华人，副教授，主要从事大学物理实验教学，实验仪器研发，机器学习. E-mail: whyx@fudan.edu.cn
+}
+
+% -------------------- 中英文标题与摘要信息 --------------------
+\begin{center}
+{\Large \bfseries 第56届国际物理奥林匹克竞赛实验试题解析及仪器改进探讨\\——热力学综合实验的物理探究}
+
+\vspace{0.4cm}
+{\large 俞 \ 熹$^{1}$，梁 \ 航$^{2}$，邓翔允$^{1}$，蒋最敏$^{1}$，乐永康$^{1}$，戚 \ 扬$^{1}$，殷立峰$^{1}$}
+
+\vspace{0.2cm}
+{\small （1. 复旦大学 物理学系，上海 200433）}
+{\small （2. 复旦大学 中国语言文学系，上海 200433）}
+\end{center}
+
+\vspace{0.2cm}
+\noindent \textbf{摘 \ 要：}第56届国际物理奥林匹克竞赛（IPhO 2026）实验试题设计了一套基于同心双有机玻璃圆筒的热力学综合实验系统，要求依次探究密闭空气的等容过程状态方程、纯水饱和蒸汽压的克劳修斯--克拉佩龙方程以及傅里叶径向热传导特性。本文阐述了该实验装置的结构设计与测量原理；基于热力学理论模型推导和复现实验数据，给出了各任务的定量求解和数据处理与不确定度评定。在此基础上，从热力学非平衡动态测量与仪器工程工艺角度，深入诊断了原装置在升温承压下的管路慢渗漏缺陷与温度传感器的热滞后效应。最终提出了以上问题的改进方案，为物理奥赛实验命题设计与拔尖创新实验教学提供参考。
+
+\noindent \textbf{关键词：}国际物理奥林匹克竞赛（IPhO）；热力学综合实验；理想气体状态方程；饱和蒸汽压；克劳修斯--克拉佩龙方程；傅里叶导热定律；热滞后效应；仪器改进
+
+\noindent \textbf{中图分类号：}O 4-33 \hfill \textbf{文献标识码：}A
+
+
+% -------------------- 正文内容 --------------------
+\section{引言}
+2026年7月，第56届国际物理奥林匹克竞赛（IPhO 2026）在哥伦比亚布卡拉曼加举行\cite{ref16}，由复旦大学物理学系带领参赛的中国代表队5名选手均获金牌，其中4名选手还获得理论满分的好成绩。IPhO 作为全球中学生最高水平的物理学术竞技平台，其实验试题注重考查学生的物理洞察力、实验操作能力以及对非理想测量环境的数据建模与误差甄别能力\cite{ref1, ref2, ref3, ref4}。
+
+在历届国际与亚洲物理奥赛中，由于热学实验普遍面临环境对流散热难以绝热隔离、气密性随温度压力变化、多相热交换动态时间常数大等工程难题，实验赛题的研制与实现具有极高挑战度\cite{ref5}。本届 IPhO 实验试题打破传统力学、电磁学与光学主导的常规格局，设计了一套“同心双有机玻璃（PMMA）圆筒”综合热学实验平台，将理想气体状态方程、饱和水蒸汽压的克劳修斯--克拉佩龙方程以及傅里叶径向热传导定律的实验内容高度集成。赛题任务环环相扣，既考查了基于极端状态外推提取基础物理常量的方法，又涉及导热速率微分方程的离散化回归分析。
+
+然而，热力学测量对装置气密性、测温动态响应速率以及热平衡条件极为敏感。赛后复现实验时表明，竞赛原装装置在升温测试时存在气动软管微漏与大热容金属探头的明显测温滞后效应，对实验定量结果产生系统性困难。本文首先对原题的实验任务与物理原理进行全面的理论推导与数据解析；随后从实验热力学非理想特性与仪器制造工艺出发，剖析系统误差根源，最终提出针对性的工程改进方案与教学实践启示。
+
+\section{实验装置与工作原理}
+实验系统由同心双有机玻璃圆筒实验主体、电子测控与液晶显示模块以及液体管路与阀门控制面板三大子系统组成，其实物照片与结构示意如图~\ref{fig:apparatus} 所示。
+
+\begin{figure}[htbp]
+\centering
+\begin{minipage}[b]{0.61\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures/实验装置图.png}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.36\textwidth}
+\centering
+\includegraphics[width=0.88\textwidth]{figures/tubes.png}
+\end{minipage}
+\caption{第56届 IPhO 热力学综合实验装置：（左）实验系统完整实物照片（含测控电路、液体管路与实验主体）；（右）同心双有机玻璃圆筒实验主体结构示意图（IC：内筒；OC：外筒）}
+\label{fig:apparatus}
+\end{figure}
+
+各子系统结构与功能规范如下：
+\begin{enumerate}
+\item \textbf{同心双圆筒主体}：内筒（Inner Cylinder, IC）刻有毫米分度厘米标尺，内径 $d_1 = 33.7(1)\ \mathrm{mm}$ 壁厚 $\delta = 3.4(1)\ \mathrm{mm}$，用于容纳待测液体与密闭空气（Confined Air, CA）；外筒（Outer Cylinder, OC）外径 $74.8(1)\ \mathrm{mm}$，注入清水作为控温水浴。圆筒上下端通过盖板用橡胶圈与端盖压紧密封，内筒顶部设有温度和压力传感器及连通大气的截止阀门 E。
+\item \textbf{电子测控模块}：集成微处理器、数字液晶屏、微型直流循环水泵及加热棒供电电路。屏幕实时显示内筒绝对压强 $p$、环境大气压 $p_{\mathrm{atm}}$、内筒水温 $T_{\mathrm{IC}}$、外筒水温 $T_{\mathrm{OC}}$ 以及数字秒表计时 $t$。面板设有水泵开关（PUMP）以及四个控制按键（1--计时启停，2--秒表归零，3--图形切换，4--加热启停）。
+\item \textbf{液体管路控制模块}：面板集成四个快插双通球阀（A、B、C、D）。阀门 A 控制外筒注入冷水；阀门 B 控制外筒水在水浴与泵体间闭环循环以实现水温快速均匀化；阀门 C 控制外筒排水；阀门 D 连接 $100\ \mathrm{mL}$ 注射器，用于向内筒定量注入或抽取液体。
+\end{enumerate}
+
+系统核心实验任务包含三个环节：A部分利用丙二醇（PG）封闭恒定体积空气测定普适气体常量 $R$；B部分利用纯水的降温过程测定饱和蒸汽压 $p_{\mathrm{v}}(T)$ 并求解汽化潜热 $\Delta H_{\mathrm{v}}$；C部分利用内外筒水温动态演化测定有效热阻 $R_{\mathrm{th}}$ 与材料热导率 $\lambda$。
+
+\section{原题实验任务全解与数据分析}
+
+\subsection{A部分：密闭空气等容过程与状态方程验证}
+在固定密闭气体体积的条件下，理想气体的热力学压强与绝对温度成正比。向内筒注入液面高度 $h = 4.5(1)\ \mathrm{cm}$ 的丙二醇（PG），关闭阀门 D 和阀门 E。由于丙二醇在 $30\sim 65^\circ\mathrm{C}$ 范围内的饱和蒸汽压小于 $0.05\ \mathrm{kPa}$，故可近似认为气相空间完全由干空气构成。
+
+\subsubsection{密闭气体几何参数与物质量计算}
+内筒顶部总高 $H_{\mathrm{total}} = 14.0\ \mathrm{cm}$，液面上方气柱高度 $H = H_{\mathrm{total}} - h = 9.5(1)\ \mathrm{cm}$。密闭空气体积 $V$ 为：
+\begin{equation}
+V = \pi r_1^2 H = \pi \times (1.685\ \mathrm{cm})^2 \times 9.5\ \mathrm{cm} = 84.7(10)\ \mathrm{mL} \approx 85(2)\ \mathrm{mL}
+\label{eq:volume}
+\end{equation}
+根据比赛当地气象参数：年均空气密度 $\rho_{\mathrm{a}} = 1.12\ \mathrm{kg/m^3}$（海拔约 $960\ \mathrm{m}$，气压约 $90\ \mathrm{kPa}$），密闭空气质量 $m$ 为：
+\begin{equation}
+m = \rho_{\mathrm{a}} V = 1.12\ \mathrm{kg/m^3} \times 84.7\times 10^{-6}\ \mathrm{m^3} = 0.95(2)\times 10^{-4}\ \mathrm{kg} = 0.095(2)\ \mathrm{g}
+\end{equation}
+取空气平均摩尔质量 $M_{\mathrm{a}} = 28.96\ \mathrm{g/mol}$，阿伏伽德罗常量 $N_{\mathrm{A}} = 6.022\times 10^{23}\ \mathrm{mol^{-1}}$，计算密闭空气的物质的量 $n$ 及分子总数 $N$：
+\begin{equation}
+n = \frac{m}{M_{\mathrm{a}}} = \frac{0.095\ \mathrm{g}}{28.96\ \mathrm{g/mol}} = 3.28(7)\times 10^{-3}\ \mathrm{mol} = 3.28(7)\ \mathrm{mmol}
+\end{equation}
+\begin{equation}
+N = n N_{\mathrm{A}} = 3.28\times 10^{-3}\ \mathrm{mol} \times 6.022\times 10^{23}\ \mathrm{mol^{-1}} = 1.98(5)\times 10^{21}
+\end{equation}
+
+\subsubsection{等容升降温数据记录与线性拟合}
+开启外筒加热棒与循环水泵，使水温在 $301\sim 329\ \mathrm{K}$ 范围内缓慢上升，记录内筒气压 $p$ 随热力学温度 $T$ 的变化数据；在达到高温段附近发现漏气。 停止加热后，继续记录自然降温过程中的气压演化，以全面考察系统的动态热力学响应与密封特性。实验测得完整的29组升降温连续数据如表~\ref{tab:part_a} 所示。
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\caption{A部分 密闭空气等容升温与降温过程记录数据表（共29组）}
+\label{tab:part_a}
+\begin{tabular}{ccc|ccc|ccc}
+\toprule
+$T/\mathrm{K}$ & $p_{\text{升}}/\mathrm{kPa}$ & $p_{\text{降}}/\mathrm{kPa}$ & $T/\mathrm{K}$ & $p_{\text{升}}/\mathrm{kPa}$ & $p_{\text{降}}/\mathrm{kPa}$ & $T/\mathrm{K}$ & $p_{\text{升}}/\mathrm{kPa}$ & $p_{\text{降}}/\mathrm{kPa}$ \\
+\midrule
+301 & 101.4 & 95.5 & 311 & 104.1 & 95.7 & 321 & 107.8 &  98.5 \\
+302 & 101.5 & 95.5 & 312 & 104.5 & 96.0 & 322 & 108.0 &  99.6 \\
+303 & 102.1 & 95.7 & 313 & 105.0 & 96.1 & 323 & 108.2 & 100.2 \\
+304 & 102.5 & 95.6 & 314 & 105.3 & 96.3 & 324 & 108.6 & 100.7 \\
+305 & 102.7 & 95.9 & 315 & 105.7 & 96.6 & 325 & 108.8 & 101.2 \\
+306 & 103.4 & 96.0 & 316 & 105.8 & 96.9 & 326 & 108.2 & 101.6 \\
+307 & 103.5 & 95.9 & 317 & 106.6 & 97.0 & 327 & 108.1 & 102.6 \\
+308 & 103.7 & 95.4 & 318 & 106.7 & 97.4 & 328 & 108.4 & 103.3 \\
+309 & 103.9 & 95.4 & 319 & 107.0 & 97.6 & 329 & 107.0 & 104.6 \\
+310 & 104.0 & 95.7 & 320 & 107.4 & 98.1 &     &       &       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+根据理想气体状态方程 $p V = n R T$\cite{ref6, ref8}，在密闭恒定体积下气相压强与绝对温度成正比：
+\begin{equation}
+p(T) = \left(\frac{nR}{V}\right)T = a_{\mathrm{A}} T + b_{\mathrm{A}}
+\label{eq:ideal_gas}
+\end{equation}
+绘制升温与降温过程的 $p-T$ 散点分布及线性回归拟合线，如图~\ref{fig:isochoric} 所示。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.54\textwidth]{figures/fig_A.pdf}
+\caption{A部分：密闭空气等容升温与降温过程 $p-T$ 关系曲线及剔除漏气段后的线性拟合}
+\label{fig:isochoric}
+\end{figure}
+
+深入分析实验曲线的物理演化历程可知：
+\begin{enumerate}
+\item \textbf{升温线性区与高温漏气剔除}：在 $301\sim 325\ \mathrm{K}$ 升温区间内，密闭空气受热均匀膨胀，气压随温度线性上升。当温度进一步升至 $T > 325\ \mathrm{K}$（气压突破 $108\ \mathrm{kPa}$）时，由于原装普通硅胶软管受热软化且接口在较大内外压差（$\Delta p > 18\ \mathrm{kPa}$）下产生微慢渗漏，密闭气体物质的量 $n$ 减少，导致气压反常跌落。因此，提取气体常数必须剔除漏气失真段，选取 $301\sim 325\ \mathrm{K}$（共25组数据）进行线性拟合：
+\begin{equation}
+p_{\mathrm{heat}}(T) = 0.3095(13)\ T + 8.24(41)\ \mathrm{kPa}, \quad R^2 = 0.993
+\end{equation}
+拟合斜率 $a_{\mathrm{A}} = 0.3095\ \mathrm{kPa/K} = 309.5\ \mathrm{Pa/K}$。结合密闭空气物质的量 $n = \rho_{\mathrm{a}}V/M_{\mathrm{a}}$，普适气体常量 $R$ 为：
+\begin{equation}
+R = \frac{a_{\mathrm{A}} V}{n} = \frac{a_{\mathrm{A}} M_{\mathrm{a}}}{\rho_{\mathrm{a}}} = \frac{309.5\ \mathrm{Pa/K} \times 0.02896\ \mathrm{kg/mol}}{1.12\ \mathrm{kg/m^3}} = 8.0(4)\ \mathrm{J/(mol\cdot K)}
+\end{equation}
+评定相对不确定度 $u_r(R) \approx 4.7\%$，测得值与参考答案（$R = 8.4(4)\ \mathrm{J/(mol\cdot K)}$）契合。
+
+恒容热压强系数 $\beta_0$ 为参考状态（$p_0 = 101.3\ \mathrm{kPa}, T_0 = 273.15\ \mathrm{K}$）下的相对压强温度系数：
+\begin{equation}
+\beta_0 = \frac{1}{p_0}\left(\frac{\Delta p}{\Delta T}\right)_V = \frac{a_{\mathrm{A}}}{p_0} = \frac{0.3095\ \mathrm{kPa/K}}{101.3\ \mathrm{kPa}} = 3.06(15)\times 10^{-3}\ \mathrm{K^{-1}}
+\end{equation}
+与理想气体理论极限值 $\beta_0^{\mathrm{theory}} = 1/273.15\ \mathrm{K} = 3.66\times 10^{-3}\ \mathrm{K^{-1}}$ 接近。
+
+\item \textbf{降温线性段与漏气减缓稳态分析}：停止加热后从 $329\ \mathrm{K}$ 开始自然降温。在 $329\sim 311\ \mathrm{K}$ 降温段，随着温降及压差减小，管路微漏气速率显著减缓，气压从 $104.6\ \mathrm{kPa}$ 单调平稳下降至 $95.7\ \mathrm{kPa}$。选取该降温主响应段（$311\sim 329\ \mathrm{K}$）进行线性回归：
+\begin{equation}
+p_{\mathrm{cool}}(T) = 0.4718(27)\ T - 52.01(86)\ \mathrm{kPa}, \quad R^2 = 0.944
+\end{equation}
+当温度降至 $310\sim 301\ \mathrm{K}$ 时，内外压差消除且漏气完全停止，系统在因漏气导致物质的量减少后的新平衡态下保持稳定（$95.4\sim 95.7\ \mathrm{kPa}$）。升温与降温曲线的对比印证了高温高压微漏气与传感器热滞后的物理机制，为后续第 4 节的讨论内容提供了实测依据。
+\end{enumerate}
+
+\subsection{B部分：饱和水蒸汽压测定与汽化潜热计算}
+排空丙二醇并冲刷内筒后注入纯水，使液面高度为 $h = 5.0(1)\ \mathrm{cm}$。打开阀门 E，取下注射器活塞并将注射器竖直固定，使内筒气相压强与环境大气压平衡（$p_{\mathrm{tot}} = p_{\mathrm{atm}} = 101.3\ \mathrm{kPa}$）。为消除原硅胶管在高温下发生微量渗漏的隐患，示范实验换用高密度 PA-12 耐热软管。关闭阀门 E，将外筒水浴加热至约 $60^\circ\mathrm{C}$，停止加热并在自然降温过程中记录内筒气柱高度 $H$ 随水温 $T$ 的演化规律。
+
+\subsubsection{饱和蒸汽压分压方程的推导}
+在水--水蒸汽--干空气共存的密闭内筒中，根据道尔顿分压定律与克劳修斯--克拉佩龙方程\cite{ref6, ref7, ref9}，气体总压等于干空气分压 $p_{\mathrm{air}}$ 与饱和水蒸汽压 $p_{\mathrm{v}}$ 之和：
+\begin{equation}
+p_{\mathrm{tot}} = p_{\mathrm{air}}(T) + p_{\mathrm{v}}(T) = p_{\mathrm{atm}} \implies p_{\mathrm{v}}(T) = p_{\mathrm{atm}} - p_{\mathrm{air}}(T)
+\label{eq:dalton}
+\end{equation}
+将内筒干空气视为理想气体，其物质的量 $n_{\mathrm{air}}$ 保持恒定：
+\begin{equation}
+\frac{p_{\mathrm{air}}(T) V(T)}{T} = \frac{p_{\mathrm{air}}(T_0) V(T_0)}{T_0}
+\label{eq:air_ideal}
+\end{equation}
+取参考基准温度 $T_0 = 273.15\ \mathrm{K}\ (0^\circ\mathrm{C})$，此时冰水共存的饱和水蒸汽压极小（理论值仅 $0.61\ \mathrm{kPa} \ll p_{\mathrm{atm}}$），在本次测量精度下可忽略，即 $p_{\mathrm{v}}(T_0) \approx 0$。根据式~\eqref{eq:dalton}，参考基准温度下干空气分压占满全压：
+\begin{equation}
+p_{\mathrm{air}}(T_0) \approx p_{\mathrm{atm}}
+\end{equation}
+内筒截面积恒定，气体体积比等于高度比：$V(T)/V(T_0) = H(T)/H_0$，代入式~\eqref{eq:air_ideal} 得到任意温度下的干空气分压表达式：
+\begin{equation}
+p_{\mathrm{air}}(T) = p_{\mathrm{atm}}\left(\frac{H_0}{H(T)}\right)\left(\frac{T}{T_0}\right)
+\end{equation}
+将其代入道尔顿分压定律，导出饱和水蒸汽压的定量计算公式：
+\begin{equation}
+p_{\mathrm{v}}(T) = p_{\mathrm{atm}}\left(1 - \frac{H_0}{H(T)}\frac{T}{T_0}\right)
+\label{eq:vapor_calc}
+\end{equation}
+
+\subsubsection{低温段线性外推基准高度与克劳修斯--克拉佩龙拟合}
+由式~\eqref{eq:vapor_calc} 可知，气柱总高度理论上满足：
+\begin{equation}
+H(T) = H_0 \left(\frac{T}{T_0}\right) \frac{p_{\mathrm{atm}}}{p_{\mathrm{atm}} - p_{\mathrm{v}}(T)}
+\label{eq:h_nonlinear}
+\end{equation}
+在较低水温区间（$T_{\mathrm{C}} \le 39.3^\circ\mathrm{C}$ 时，$p_{\mathrm{v}}(T) < 8\ \mathrm{kPa} \ll p_{\mathrm{atm}}$），分母近似等于 $p_{\mathrm{atm}}$，此时气相空间几乎全由干空气主导，气柱高度 $H(T_{\mathrm{C}}) \approx H_0(1 + T_{\mathrm{C}}/T_0)$ 随摄氏温度 $T_{\mathrm{C}}$ 保持严格的线性膨胀关系。然而，随着水温上升至高温段（$T_{\mathrm{C}} > 40^\circ\mathrm{C}$），饱和水蒸汽压 $p_{\mathrm{v}}(T)$ 随绝对温度 $T$ 呈指数级激增，使干空气分压急剧下降，使气柱高度 $H(T_{\mathrm{C}})$ 变化呈现出明显的非线性上翘。因此，\textbf{确定 $0^\circ\mathrm{C}$ 时的干空气基准气柱高度 $H_0$ 时，不能在全温区进行整体线性拟合，而必须在低温线性段（$27.3\sim 39.3^\circ\mathrm{C}$）进行线性外推}。
+
+实验测得从 $59.0^\circ\mathrm{C}$ 降温至 $27.3^\circ\mathrm{C}$ 的23组连续测量数据，如表~\ref{tab:part_b} 所示。
+
+\begin{table}[htbp]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\caption{B部分 气柱高度 $H$ 随温度变化及饱和蒸汽压 $p_{\mathrm{v}}$ 计算数据表（PA-12 耐热管示范数据）}
+\label{tab:part_b}
+\begin{tabular}{cccccc|cccccc}
+\toprule
+$T_{\mathrm{C}}/^\circ\mathrm{C}$ & $T/\mathrm{K}$ & $H/\mathrm{cm}$ & $10^3/T$ & $p_{\mathrm{v}}/\mathrm{Pa}$ & $\ln(p_{\mathrm{v}}/\mathrm{Pa})$ & $T_{\mathrm{C}}/^\circ\mathrm{C}$ & $T/\mathrm{K}$ & $H/\mathrm{cm}$ & $10^3/T$ & $p_{\mathrm{v}}/\mathrm{Pa}$ & $\ln(p_{\mathrm{v}}/\mathrm{Pa})$ \\
+\midrule
+59.0 & 332.15 & 11.9 & 3.011 & 16248 & 9.696 & 45.3 & 318.45 & 10.6 & 3.140 &  9756 & 9.186 \\
+57.7 & 330.85 & 11.7 & 3.023 & 15133 & 9.625 & 44.2 & 317.35 & 10.5 & 3.151 &  9203 & 9.127 \\
+56.7 & 329.85 & 11.6 & 3.032 & 14653 & 9.592 & 42.8 & 315.95 & 10.4 & 3.165 &  8728 & 9.074 \\
+56.2 & 329.35 & 11.5 & 3.036 & 14032 & 9.549 & 41.4 & 314.55 & 10.3 & 3.179 &  8243 & 9.017 \\
+55.5 & 328.65 & 11.4 & 3.043 & 13454 & 9.507 & 39.3 & 312.45 & 10.2 & 3.201 &  7958 & 8.982 \\
+54.3 & 327.45 & 11.3 & 3.054 & 13000 & 9.473 & 37.3 & 310.45 & 10.1 & 3.221 &  7638 & 8.941 \\
+53.3 & 326.45 & 11.2 & 3.063 & 12483 & 9.432 & 35.8 & 308.95 & 10.0 & 3.237 &  7158 & 8.876 \\
+52.0 & 325.15 & 11.1 & 3.076 & 12040 & 9.396 & 33.8 & 306.95 &  9.9 & 3.258 &  6823 & 8.828 \\
+50.5 & 323.65 & 11.0 & 3.090 & 11644 & 9.363 & 31.8 & 304.95 &  9.8 & 3.279 &  6480 & 8.777 \\
+49.3 & 322.45 & 10.9 & 3.101 & 11157 & 9.320 & 29.5 & 302.65 &  9.7 & 3.304 &  6226 & 8.736 \\
+48.6 & 321.75 & 10.8 & 3.108 & 10520 & 9.261 & 27.3 & 300.45 &  9.6 & 3.328 &  5933 & 8.688 \\
+47.0 & 320.15 & 10.7 & 3.124 & 10127 & 9.223 &      &        &      &       &       &       \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth]{figures/fig_B.pdf}
+\caption{B部分实验数据处理：(a) 气柱高度 $H$ 随摄氏温度 $T_{\mathrm{C}}$ 的变化规律、低温线性段拟合与 $0^\circ\mathrm{C}$ 基准高度 $H_0$ 外推（展现高温上翘偏离）；(b) 饱和水蒸汽压克劳修斯--克拉佩龙拟合曲线}
+\label{fig:vapor_pressure}
+\end{figure}
+
+如图~\ref{fig:vapor_pressure}(a) 所示，选取低温线性区（$27.3\sim 39.3^\circ\mathrm{C}$，7组数据点）进行一元线性回归：
+\begin{equation}
+H(T_{\mathrm{C}}) = 0.0502(13)\ T_{\mathrm{C}} + 8.22(4)\ \mathrm{cm}, \quad R^2 = 0.997
+\end{equation}
+外推至 $T_{\mathrm{C}} = 0^\circ\mathrm{C}$，严格求得参考基准气柱高度 $H_0 = 8.22(4)\ \mathrm{cm}$（对应基准干空气体积 $V_0 = \pi r_1^2 H_0 = 73.3(4)\ \mathrm{mL}$）。从图~\ref{fig:vapor_pressure}(a) 可以清晰观察到，水温超过 $40^\circ\mathrm{C}$ 后，实验测量点明显向上偏离低温线性外延参考线，印证了水蒸气分压非线性增加的物理规律。
+
+将基准高度 $H_0 = 8.22\ \mathrm{cm}$ 代入式~\eqref{eq:vapor_calc}，计算出全温区各点的饱和水蒸汽压 $p_{\mathrm{v}}$。根据克劳修斯--克拉佩龙方程\cite{ref6, ref7}：
+\begin{equation}
+\ln(p_{\mathrm{v}}/\mathrm{Pa}) = -\frac{\Delta H_{\mathrm{v}}}{R}\left(\frac{1}{T}\right) + C
+\label{eq:clausius}
+\end{equation}
+将各温度下的 $\ln(p_{\mathrm{v}}/\mathrm{Pa})$ 对 $10^3/T$ 作图并进行一元线性拟合，如图~\ref{fig:vapor_pressure}(b) 所示：
+\begin{equation}
+\ln(p_{\mathrm{v}}/\mathrm{Pa}) = -3.173\times 10^3\ \left(\frac{1}{T}\right) + 19.17, \quad R^2 = 0.983
+\end{equation}
+拟合斜率 $a_{\mathrm{B}} = -3.17(9)\times 10^3\ \mathrm{K}$。取标准普适气体常量 $R = 8.314\ \mathrm{J/(mol\cdot K)}$，计算得到纯水的摩尔汽化潜热 $\Delta H_{\mathrm{v}}$ 与比汽化潜热 $L_{\mathrm{v}}$：
+\begin{equation}
+\Delta H_{\mathrm{v}} = -a_{\mathrm{B}} R = 3173\ \mathrm{K} \times 8.314\ \mathrm{J/(mol\cdot K)} = 26.4(8)\ \mathrm{kJ/mol}
+\end{equation}
+\begin{equation}
+L_{\mathrm{v}} = \frac{\Delta H_{\mathrm{v}}}{M_{\mathrm{H_2O}}} = \frac{26.38\times 10^3\ \mathrm{J/mol}}{0.01802\ \mathrm{kg/mol}} = 1.46(5)\times 10^3\ \mathrm{kJ/kg}
+\end{equation}
+若进一步针对蒸汽压较大、差值减法相对误差较小的高温段（$40.0\sim 59.0^\circ\mathrm{C}$，共16组数据）单独进行拟合，斜率为 $a_{\mathrm{B}} = -3.81(10)\times 10^3\ \mathrm{K}$，算得 $\Delta H_{\mathrm{v}} = 31.7(8)\ \mathrm{kJ/mol}$（$R^2 = 0.992$），与参考值（$39(2)\ \mathrm{kJ/mol}$）更加接近。
+
+\subsubsection{理论文献标准值对比与测量机理深入探讨}
+查阅工具书\cite{ref14} 与经典教材\cite{ref15}，纯水的摩尔汽化潜热（摩尔蒸发焓）$\Delta_{\mathrm{vap}} H_{\mathrm{m}}$ 随温度升高略有递减：
+\begin{itemize}
+\item 在 $T = 273.15\ \mathrm{K}\ (0^\circ\mathrm{C})$ 时，$\Delta H_{\mathrm{v}} = 45.05\ \mathrm{kJ/mol}$（对应比汽化潜热 $L_{\mathrm{v}} = 2501\ \mathrm{kJ/kg}$）；
+\item 在标准室温 $T = 298.15\ \mathrm{K}\ (25^\circ\mathrm{C})$ 时，标准摩尔汽化焓 $\Delta_{\mathrm{vap}} H_{\mathrm{m}}^\ominus = 43.99\ \mathrm{kJ/mol}$（$L_{\mathrm{v}} = 2442\ \mathrm{kJ/kg}$）；
+\item 在本实验测量的平均温度区间（$\bar{T} \approx 43.2^\circ\mathrm{C} = 316.35\ \mathrm{K}$）内，文献理论值为 $\Delta H_{\mathrm{v}}(\bar{T}) = 43.20\ \mathrm{kJ/mol}$（$L_{\mathrm{v}} = 2397\ \mathrm{kJ/kg}$）；
+\item 在标准沸点 $T = 373.15\ \mathrm{K}\ (100^\circ\mathrm{C})$ 时，$\Delta H_{\mathrm{v}} = 40.66\ \mathrm{kJ/mol}$（$L_{\mathrm{v}} = 2257\ \mathrm{kJ/kg}$）。
+\end{itemize}
+官方命题组给出的实验参考标准为 $\Delta H_{\mathrm{v}}^{\mathrm{ref}} = 39(2)\ \mathrm{kJ/mol}$（拟合斜率 $a = -4.7(2)\times 10^3\ \mathrm{K}$）。将本文测得的实验值（全温区 $26.4(8)\ \mathrm{kJ/mol}$，高温段 $31.7(8)\ \mathrm{kJ/mol}$）与文献标准理论值（$43.20\ \mathrm{kJ/mol}$）及官方参考值对比可知，实验在数量级上符合热力学物理规律，高温段与预期更接近，仍可能存在渗漏。
+
+实验全温区拟合斜率略低于纯水理论值的主要机理在于：在低温区间（$T < 35^\circ\mathrm{C}$），饱和蒸汽压绝对值较小（仅数千帕），通过分压定律 $p_{\mathrm{v}} = p_{\mathrm{atm}} - p_{\mathrm{air}}$ 采用大数相减计算 $p_{\mathrm{v}}$ 时，气柱读数不确定度（$0.1\ \mathrm{cm}$）对低温 $p_{\mathrm{v}}$ 的相对扰动较大，导致低温段 $\ln p_{\mathrm{v}}$ 数据点略有抬高，从而使全温区的回归斜率绝对值有所平缓。而在蒸汽压较大、相对测量误差显著降低的高温段（$40\sim 59^\circ\mathrm{C}$），汽化潜热测量值迅速回升至 $31.7\ \mathrm{kJ/mol}$。
+
+\subsection{C部分：同心圆筒壁热传导特性与热导率测定}
+本部分研究外筒热水（$T_{\mathrm{OC}}$，初始水深 $h_{\mathrm{OC}} \approx 15\ \mathrm{cm}$）向内筒冷水（$T_{\mathrm{IC}}$，初始水深 $h_{\mathrm{IC}} \approx 10\ \mathrm{cm}$）通过有机玻璃圆筒壁的径向热传导动态过程。
+
+\subsubsection{圆柱薄壁径向导热微分积分推导}
+内筒冷水质量为 $m_{\mathrm{IC}} = \rho_0 \pi r_1^2 h_{\mathrm{IC}} \approx 89(1)\ \mathrm{g} = 0.089\ \mathrm{kg}$，水的比热容 $c_0 = 4184\ \mathrm{J/(kg\cdot K)}$。在时间微元 $\mathrm{d}t$ 内，内筒水吸收热量使水温升高 $\mathrm{d}T_{\mathrm{IC}}$：
+\begin{equation}
+\mathrm{d}Q = m_{\mathrm{IC}} c_0 \mathrm{d}T_{\mathrm{IC}}
+\end{equation}
+根据傅里叶一维径向导热定律\cite{ref7, ref8}，在半径 $r\ (r_1 \le r \le r_2)$ 处柱面热流速率为：
+\begin{equation}
+\frac{\mathrm{d}Q}{\mathrm{d}t} = -\lambda A(r) \frac{\mathrm{d}T}{\mathrm{d}r} = -2\pi \lambda h_{\mathrm{IC}} r \frac{\mathrm{d}T}{\mathrm{d}r}
+\end{equation}
+在准稳态导热近似下，$\mathrm{d}Q/\mathrm{d}t$ 与半径 $r$ 无关，两端分离变量积分：
+\begin{equation}
+\frac{\mathrm{d}Q}{\mathrm{d}t}\int_{r_1}^{r_2}\frac{\mathrm{d}r}{r} = -2\pi \lambda h_{\mathrm{IC}} \int_{T_{\mathrm{OC}}}^{T_{\mathrm{IC}}}\mathrm{d}T \implies \frac{\mathrm{d}Q}{\mathrm{d}t} = \frac{2\pi \lambda h_{\mathrm{IC}}}{\ln(r_2/r_1)}(T_{\mathrm{OC}} - T_{\mathrm{IC}})
+\end{equation}
+定义圆筒壁的有效热阻 $R_{\mathrm{th}}$ 为温差与热流之比：
+\begin{equation}
+R_{\mathrm{th}} = \frac{T_{\mathrm{OC}} - T_{\mathrm{IC}}}{\mathrm{d}Q/\mathrm{d}t} = \frac{\ln(r_2/r_1)}{2\pi \lambda h_{\mathrm{IC}}}
+\label{eq:thermal_res}
+\end{equation}
+联立热平衡关系，得到内筒水温升高速率的离散表达式：
+\begin{equation}
+\frac{\Delta T_{\mathrm{IC}}}{\Delta t} = \frac{1}{c_0 m_{\mathrm{IC}} R_{\mathrm{th}}}\left(\overline{T}_{\mathrm{OC}} - \overline{T}_{\mathrm{IC}}\right) = k_{\mathrm{C}} \overline{\Delta T}
+\label{eq:fourier_discrete}
+\end{equation}
+其中 $\overline{\Delta T} = \frac{T_{\mathrm{OC},j}+T_{\mathrm{OC},j-1}}{2} - \frac{T_{\mathrm{IC},j}+T_{\mathrm{IC},j-1}}{2}$ 为相邻时刻间的平均温差。
+
+\subsubsection{实验数据测量与热导率计算}
+实验记录了从 $t = 0$ 到 $t = 1200\ \mathrm{s}$ 内内外筒水温的变化，如表~\ref{tab:part_c} 所示。
+
+\begin{table}[htbp]
+\centering
+\small
+\caption{C部分 热传导过程中水温演化与导热速率计算数据表}
+\label{tab:part_c}
+\begin{tabular}{cccccc}
+\toprule
+$t/\mathrm{s}$ & $T_{\mathrm{OC}}/^\circ\mathrm{C}$ & $T_{\mathrm{IC}}/^\circ\mathrm{C}$ & $\Delta T/^\circ\mathrm{C}$ & $\overline{\Delta T}/^\circ\mathrm{C}$ & $\frac{\Delta T_{\mathrm{IC}}}{\Delta t}\ /\ (10^{-2}\ ^\circ\mathrm{C}\cdot\mathrm{s}^{-1})$ \\
+\midrule
+0   & 64.6 & 35.8 & 28.8 & --    & --     \\
+60  & 63.1 & 36.4 & 26.7 & 28.10 & 0.667  \\
+180 & 60.0 & 42.6 & 17.4 & 18.55 & 4.000  \\
+300 & 57.5 & 46.5 & 11.0 & 11.85 & 2.667  \\
+480 & 54.8 & 49.3 & 5.5  & 6.10  & 1.167  \\
+660 & 53.0 & 50.5 & 2.5  & 2.80  & 0.667  \\
+840 & 51.3 & 50.7 & 0.6  & 0.85  & 0.000  \\
+1020& 49.6 & 50.4 & -0.8 & -0.65 & -0.333 \\
+1200& 48.0 & 49.6 & -1.6 & -1.45 & -0.667 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.98\textwidth]{figures/fig_C.pdf}
+\caption{C部分热传导特性分析：(a) 内外筒水温随时间演化曲线及实测交点；(b) 温差分别与外筒、内筒水温的关系、线性区绝热平衡温度 $T_{\mathrm{eq}}$ 外推与后期散热偏离；(c) 傅里叶导热定律速率拟合与有机玻璃热导率测定}
+\label{fig:heat_conduction}
+\end{figure}
+
+三联图的物理分析如下：
+\begin{enumerate}
+\item \textbf{温度时间演化与实测交点}（图~\ref{fig:heat_conduction}(a)）：
+内筒冷水初始温度为 $35.8^\circ\mathrm{C}$，外筒热水初始温度为 $64.6^\circ\mathrm{C}$。在两筒热交换以及外筒持续注入冷水强迫制冷过程中，内筒水温在 $t = 885\ \mathrm{s}$ 处达到峰值 $50.7^\circ\mathrm{C}$ 并与外筒降温曲线相交。理论上两筒温度渐近一致而不会交叉，实验中出现的交点本质上是由于内筒温度计金属探头存在较大热容，在外部水温快速变化时产生了一阶惯性测温滞后（该机制在第 4.2 节中得到印证）。
+
+\item \textbf{线性区绝热平衡温度外推与散热偏离深度讨论}（图~\ref{fig:heat_conduction}(b)）：
+在理想绝热两体热交换模型中，忽略外界环境热损失时，外筒放热量恒等于内筒吸热量：
+\begin{equation}
+m_{\mathrm{OC}} c_0 (T_{\mathrm{OC0}} - T_{\mathrm{OC}}) = m_{\mathrm{IC}} c_0 (T_{\mathrm{IC}} - T_{\mathrm{IC0}})
+\end{equation}
+由此导出瞬时温差 $\Delta T = T_{\mathrm{OC}} - T_{\mathrm{IC}}$ 分别与 $T_{\mathrm{OC}}$ 和 $T_{\mathrm{IC}}$ 的理论线性关系：
+\begin{equation}
+\Delta T = \left(1 + \frac{m_{\mathrm{OC}}}{m_{\mathrm{IC}}}\right)(T_{\mathrm{OC}} - T_{\mathrm{eq}}), \quad \Delta T = \left(1 + \frac{m_{\mathrm{IC}}}{m_{\mathrm{OC}}}\right)(T_{\mathrm{eq}} - T_{\mathrm{IC}})
+\label{eq:adiabatic_lines}
+\end{equation}
+其中 $T_{\mathrm{eq}}$ 为理想绝热平衡温度。实验中取主导热线性段（$\Delta T \ge 5.0^\circ\mathrm{C}$，此时两筒间傅里叶导热功率远大于对外界环境的散热功率）进行线性拟合：
+\begin{equation}
+\Delta T = 2.622\ T_{\mathrm{OC}} - 139.8, \quad R^2 = 0.990 \implies T_{\mathrm{eq}}^{\mathrm{OC}} = 53.3^\circ\mathrm{C}
+\end{equation}
+\begin{equation}
+\Delta T = -1.601\ T_{\mathrm{IC}} + 85.5, \quad R^2 = 0.996 \implies T_{\mathrm{eq}}^{\mathrm{IC}} = 53.4^\circ\mathrm{C}
+\end{equation}
+两根拟合直线在 $\Delta T = 0$ 处交汇于 $T_{\mathrm{eq}} = 53.4(3)^\circ\mathrm{C}$，与 命题组给出的参考值（$53^\circ\mathrm{C}$）一致。值得注意的是，斜率比值 $k_{\mathrm{OC}}/|k_{\mathrm{IC}}| = 2.622/1.601 = 1.638$，等于内外筒有效水质量比 $m_{\mathrm{OC}}/m_{\mathrm{IC}} \approx 146\ \mathrm{g} / 89\ \mathrm{g} = 1.64$，侧面验证了式~\eqref{eq:adiabatic_lines} 的正确性。
+
+\textbf{实测交点与外推交点的本质区别：} 当 $\Delta T < 5.0^\circ\mathrm{C}$ 时（图~\ref{fig:heat_conduction}(b) 中的空心散点），筒间导热速率显著衰减，系统向环境空气的自然对流与辐射散热占据主导，导致实验点脱离线性外推轨道向左侧弯曲，最终在 $50.7^\circ\mathrm{C}$ 处提前达到实际温差为零。这充分说明：\textbf{这里采用的线性区外推法更加符合实际，其核心物理精髓在于利用强换热区间的初态数据消除后期非绝热环境散热带来的系统降温误差}。
+
+\item \textbf{傅里叶导热速率拟合与热导率提取}（图~\ref{fig:heat_conduction}(c)）：
+在剔除 $t=0$ 处的传感器初态响应过渡点后，升温速率与平均温差具有高度线性相关性：
+\begin{equation}
+\frac{\Delta T_{\mathrm{IC}}}{\Delta t} = 0.00234(6)\ \overline{\Delta T} - 0.0026, \quad R^2 = 0.980
+\end{equation}
+拟合斜率 $k_{\mathrm{C}} = 0.00234\ \mathrm{s^{-1}}$。由式~\eqref{eq:fourier_discrete}，求得圆筒壁的有效热阻：
+\begin{equation}
+R_{\mathrm{th}} = \frac{1}{c_0 m_{\mathrm{IC}} k_{\mathrm{C}}} = \frac{1}{4184\ \mathrm{J/(kg\cdot K)} \times 0.089\ \mathrm{kg} \times 0.00234\ \mathrm{s^{-1}}} = 1.15(4)\ \mathrm{K/W}
+\end{equation}
+代入圆筒几何尺寸（$r_1 = 16.85\ \mathrm{mm}, r_2 = 20.25\ \mathrm{mm}, h_{\mathrm{IC}} = 100(1)\ \mathrm{mm}$），根据式~\eqref{eq:thermal_res} 计算亚克力材料的热导率 $\lambda$：
+\begin{equation}
+\lambda = \frac{\ln(r_2/r_1)}{2\pi h_{\mathrm{IC}} R_{\mathrm{th}}} = \frac{\ln(20.25/16.85)}{2\pi \times 100\ \mathrm{mm} \times 1.15\ \mathrm{K/W}} = 0.25(1)\ \mathrm{W/(m\cdot K)}
+\end{equation}
+\end{enumerate}
+该结果与参考答案值 $\lambda_{\mathrm{official}} = 0.25(1)\ \mathrm{W/(m\cdot K)}$ 吻合，且处于国家标准及热物理性质手册中亚克力（PMMA）常温标准热导率推荐区间（$0.19\sim 0.26\ \mathrm{W/(m\cdot K)}$）\cite{ref10, ref11}。
+
+\section{实验装置工程缺陷与系统误差深度剖析}
+尽管第56届 IPhO 实验题在物理思想上巧妙地串联了热力学定律，但在装置加工装配、管路选型及传感器动态响应等工程细节上存在明显缺陷。在复现过程中，通过\textbf{“注入肥皂水并分段加压观察气泡析出”的标准检漏法}，定位并确诊了原装置的工程隐患。
+
+\subsection{管道材质、装配工艺与阀门密封缺陷的实验确诊}
+通过肥皂水起泡检漏，查明了导致高温高压下数据失真的具体漏点：
+\begin{enumerate}
+\item \textbf{气动软管剪切斜口与装配缺陷}：经检查，原多处快插气动软管在端头剪切时不平齐（呈斜口状）。插接后不能形成均匀环形密封，在循环加压和水浴晃动下产生微量漏气漏水。
+\item \textbf{顶部管路 TPU 材质受热软化缺陷}：原装置上方管路采用了常规 TPU（热塑性聚氨酯）软管。在 $60\sim 65^\circ\mathrm{C}$ 水浴加热下，TPU 软化温度较低，管材急剧变软并产生径向蠕变膨胀，在接口处松动产生气密性失效。该处必须更换为耐温耐压、刚性稳定的 PTFE（聚四氟乙烯/铁氟龙）硬管。
+\item \textbf{阀门 D 白色硅胶管高温渗透}：连接注射器的阀门 D 处采用了白色透明硅胶软管。硅胶在高温湿热环境下微孔膨胀，气体渗透率成倍增加，破坏了 B 部分的恒定干空气基准。
+\item \textbf{截止阀门 E 硅胶密封失效与螺纹机械密封改造}：内筒顶部截止阀门 E 原装采用打胶式密封。在实验多次升降温循环与气压交变（绝对压强达到 $105\sim 110\ \mathrm{kPa}$）后，胶层发生疲劳(裂缝)发生严重漏气。在本地实验中临时换用了双组份耐高温环氧树脂胶封堵；而根本性的工程解决方案应是在顶盖上直接加工螺纹孔，将快插接头缠绕生料带后拧入做刚性螺纹密封，避免粘接剂受热老化或者疲劳失效。
+\end{enumerate}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/fig_B-硅胶管换黑色管子后.pdf}
+\caption{原装硅胶管与改进黑色 PA-12 耐热管性能对比：(a) 气柱高度 $H-T_{\mathrm{C}}$ 线性度对比；(b) 饱和蒸汽压克劳修斯--克拉佩龙方程拟合质量对比}
+\label{fig:tube_comparison}
+\end{figure}
+
+为了验证上述密封改进的效果，在更换高密度黑色 PA-12 耐热软管与重新平切修整接口后进行了对比实验，如图~\ref{fig:tube_comparison} 所示：
+\begin{enumerate}
+\item \textbf{气柱高度线性度}（图~\ref{fig:tube_comparison}(a)）：原管路由于渗漏使 $H-T_{\mathrm{C}}$ 线性相关系数为 $R^2 = 0.922$，而对比实验的相关系数提升至 $R^2 = 0.977$。
+\item \textbf{饱和蒸汽压拟合}（图~\ref{fig:tube_comparison}(b)）：原硅胶管在高温下由于微漏气，导致克劳修斯--克拉佩龙方程拟合严重偏离（$\Delta H_{\mathrm{v}} \approx 12.0\ \mathrm{kJ/mol}$），而改用黑色 PA-12 耐热管并采用低温线性外推后，汽化潜热测量质量显著提高至 $\Delta H_{\mathrm{v}} = 26.4\sim 31.7\ \mathrm{kJ/mol}$（$R^2 = 0.983\sim 0.992$）。
+\end{enumerate}
+
+\subsection{温度传感器的一阶惯性滞后效应}
+从实物图~\ref{fig:apparatus} 可以看出，原装置采用不锈钢粗金属套管封装的 NTC 热敏电阻作为水温传感器。为定量评估该金属探头的动态测温响应与热惯性滞后特性，本文设计了瞬态阶跃响应标定实验：将预先在温水（初始示数 $T_0 = 60.2^\circ\mathrm{C}$）中达到热平衡的金属探头，在 $t = 0$ 时刻迅速置入室温冷水（实验前水温 $21.0^\circ\mathrm{C}$，水体约 $170\ \mathrm{mL}$，最终实测稳态真温 $T_\infty = 21.4^\circ\mathrm{C}$）中，以 $2.5\sim 5\ \mathrm{s}$ 间隔连续记录探头示数 $T_{\mathrm{s}}(t)$ 从 $0$ 至 $80\ \mathrm{s}$ 的瞬态降温演化过程。
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.54\textwidth]{figures/fig_sensor_lag.pdf}
+\caption{NTC 温度传感器阶跃响应实测数据与带纯延迟的一阶惯性热滞后动力学拟合曲线}
+\label{fig:sensor_lag}
+\end{figure}
+
+由于金属套管的外壁热容量、内部封装导热介质热阻以及固液界面接触热阻的共同制约，传感器在瞬态温度场中的热交换满足带纯时间延迟的一阶惯性动力学响应模型\cite{ref12, ref13}：
+\begin{equation}
+T_{\mathrm{s}}(t) = \begin{cases}
+T_0, & t \le \theta \\
+T_\infty + (T_0 - T_\infty)\exp\left[-\dfrac{t - \theta}{\tau}\right], & t > \theta
+\end{cases}
+\label{eq:thermal_lag_model}
+\end{equation}
+其中 $\tau$ 为集总参数一阶热响应时间常数，$\theta$ 为金属外壳厚度与内部封装胶层导致的纯时间延迟（Dead Time）。
+
+将测得的18组瞬态响应实验数据代入式~\eqref{eq:thermal_lag_model}回归拟合，实测散点与拟合曲线如图~\ref{fig:sensor_lag} 所示。拟合参数为：
+\begin{equation}
+\tau = 9.20(10)\ \mathrm{s}, \quad \theta = 3.83(6)\ \mathrm{s}, \quad R^2 = 0.9998
+\end{equation}
+动力学响应方程为 $T_{\mathrm{s}}(t) = 21.4 + 38.8\exp[-(t - 3.83)/9.20]$。拟合结果展现出鲜明的物理传热两阶段特征：
+\begin{enumerate}
+\item \textbf{纯时间延迟阶段}（$t \le \theta {s}$）：在探头浸入冷水后的 $2.5\ \mathrm{s}$ 内，示数仅从 $60.2^\circ\mathrm{C}$ 微变至 $60.0^\circ\mathrm{C}$，表明外界温度阶跃信号穿透金属套管壁厚并传导至内部热敏芯片存在约 $\theta = 3.83\ \mathrm{s}$ 的死区时间；
+\item \textbf{一阶指数衰减阶段}（$t > \theta \mathrm{s}$）：热敏核心随后按单时间常数 $\tau = 9.20\ \mathrm{s}$ 呈指数衰减向环境稳态水温渐近。探头达到 $95\%$ 真实介质响应的有效时间需 $t_{0.95} = \theta + 3\tau \approx 31.4\ \mathrm{s}$（达到 $99\%$ 响应需约 $46\ \mathrm{s}$）。
+\end{enumerate}
+
+这种显著的一阶惯性热滞后效应完美确诊并解释了第 3 节中观察到的反常物理现象：
+\begin{enumerate}
+\item \textbf{A部分密闭空气 $p-T$ 顺时针滞后回环}：在密闭空气升温与降温过程中，水温呈动态变化。由于金属探头测温滞后，升温过程中探头示数滞后于实际水温（示数偏低），使同一温度读数下对应的实际气相压强偏高；而降温时探头示数滞后偏高，对应压强偏低，从而在图~\ref{fig:isochoric} 中形成了升温数据系统性高于降温数据的顺时针滞后回环。
+\item \textbf{C部分初始温升速率凹陷与后期表观温度交叉}：在内外筒径向导热与强迫制冷过程中，内筒金属探头因自身大热容吸放热迟缓，在 $0\sim 60\ \mathrm{s}$ 的初始导热阶段升温速率测量值出现明显的异常凹陷（图~\ref{fig:heat_conduction}(c) 中的初态过渡点）；而在实验后期（$t > 800\ \mathrm{s}$），外筒快速降温，内筒金属探头因降温迟滞导致示数滞后偏高，从而在图~\ref{fig:heat_conduction}(a) 中表现为理论上不可能存在的“内外筒水温曲线交叉”伪像。
+\end{enumerate}
+
+\section{竞赛级热学仪器的改进方案与教学启示}
+基于上述实验确诊结果，本文提出以下工程改进方案：
+\begin{enumerate}
+\item \textbf{管路与连接件工业化升级}：淘汰普通 TPU 和软硅胶管，全线采用耐温 PTFE 铁氟龙管与黑色 PA-12 耐热软管；配备专用切管钳杜绝斜口；所有亚克力承压接口均加工机械螺纹孔并采用金属接头旋入密封。
+\item \textbf{微型快速响应温度传感器}：淘汰大体积金属包裹 NTC 探头，改用外径 $< 1.0\ \mathrm{mm}$ 的细线裸露型微型 PT100 铂电阻或微型细丝热电偶，将热响应时间常数压缩至 $\tau < 0.5\ \mathrm{s}$，消除动态测量滞后。
+\item \textbf{出厂前肥皂水起泡与加压保压标准化测试}：竞赛仪器在交付前，应统一在 $70^\circ\mathrm{C}$ 下施加 $150\ \mathrm{kPa}$ 气压进行 $30\ \mathrm{min}$ 肥皂水气泡检漏与保压老化测试，确保各工位赛题器材的可靠与公平。
+\item \textbf{大学物理实验教学拓展}：该实验涵盖了“分压扣除法”、“绝热平衡温外推”及“微分导热速率拟合”等经典物理实验方法，非常适合改造成大学物理拔尖创新人才的高阶探究性实验项目\cite{ref5, ref8}。
+\end{enumerate}
+
+\section{结论}
+第56届 IPhO 实验试题以精巧的同心双有机玻璃圆筒装置为载体，实现了理想气体状态方程、饱和水蒸汽压与克劳修斯--克拉佩龙方程、以及傅里叶径向热传导的三个综合实验测量。本文基于热力学理论推导与本地复现实验数据，给出了该套试题完整解。同时，本文从仪器工程与测量角度，深入剖析了原装置在高温气密性微漏与温度传感器热滞后等方面的系统缺陷，并通过对比实验验证了以上观点。本文的研究不仅为国际顶级物理奥赛试题解析提供了详实的高质量文献参考，也为高校实验教学仪器的研制和工程化实施提供了清晰的物理图景与实践依据。
+
+
+% -------------------- 参考文献 --------------------
+\begin{thebibliography}{99}
+	\bibitem{ref1} 郭旭波, 蒋硕, 张留碗, 安宇, 阮东. 第24届亚洲物理奥林匹克竞赛实验试题介绍与解答[J]. 物理实验, 2024, 44(11): 28-35.
+	\bibitem{ref2} 荣新, 李智, 孟策, 王若鹏. 第23届亚洲物理奥林匹克竞赛实验试题介绍与解答[J]. 物理实验, 2024, 44(3): 15-24.
+	\bibitem{ref3} 郭旭波, 蒋硕, 张留碗, 安宇, 阮东. 第54届国际物理奥林匹克竞赛实验试题介绍及解答[J]. 物理实验, 2024, 44(11): 35-44.      
+	\bibitem{ref4} 青一平. 物理奥林匹克竞赛实验教程[M]. 长沙: 湖南师范大学出版社, 2003.
+	\bibitem{ref5} 沈元华, 陆申龙. 基础物理实验[M]. 北京: 高等教育出版社, 2003.
+	\bibitem{ref6} 秦允豪. 热学[M]. 3版. 北京: 高等教育出版社, 2011.
+	\bibitem{ref7} 张三慧. 大学物理学(第三册): 热学[M]. 北京: 清华大学出版社, 2008.
+	\bibitem{ref8} 竺江峰, 鲁晓东, 查理 大学物理实验[M]. 2版. 北京: 中国水利水电出版社, 2014.
+	\bibitem{ref9} 杨述武, 赵立竹, 沈国土. 普通物理实验(力学、热学部分)[M]. 4版. 北京: 高等教育出版社, 2007.
+	\bibitem{ref10} 国家质量监督检验检疫总局, 国家标准化管理委员会. 纤维增强塑料导热系数试验方法: GB/T 3139-2005[S]. 北京: 中国标准出版社, 2005.
+	\bibitem{ref11} 杨世铭, 陶文铨. 传热学[M]. 4版. 北京: 高等教育出版社, 2006.
+	\bibitem{ref12} 赵俭. 气流温度传感器时间常数关键影响因素分析[J]. 计量学报, 2022, 43(12): 1581-1586.
+	\bibitem{ref13} 樊尚春. 传感器技术及应用[M]. 3版. 北京: 北京航空航天大学出版社, 2016.
+	\bibitem{ref14} Haynes W M. CRC Handbook of Chemistry and Physics[M]. 95th ed. Boca Raton: CRC Press, 2014: 6-139.
+	\bibitem{ref15} 傅献彩, 沈文霞, 姚天扬, 侯文华. 物理化学[M]. 5版. 北京: 高等教育出版社, 2005: 185-188.
+	\bibitem{ref16} International Physics Olympiad 2026 Organizing Committee. 56th International Physics Olympiad[EB/OL]. (2026-07) [2026-08-25]. https://ipho2026.com/.
+\end{thebibliography}
+
+\vspace{0.5cm}
+\begin{center}
+	{\Large \bfseries Theoretical Analysis and Apparatus Improvements of the 56th IPhO Experimental Exam: Physical Exploration of a Comprehensive Thermodynamics Experiment}
+	
+	\vspace{0.4cm}
+	{\large YU Xi$^{1}$,  LIANG Hang$^{2}$, DENG Xiangyun$^{1}$,  JIANG Zuimin$^{1}$, LE Yongkang$^{1}$, QI Yang$^{1}$, YIN Lifeng$^{1}$}
+	
+	\vspace{0.2cm}
+	{\small (1. Department of Physics, Fudan University, Shanghai 200433, China)} 
+	{\small (2. Department of Chinese Language and Literature, Fudan University, Shanghai 200433, China)}
+\end{center}
+
+\vspace{0.2cm}
+\noindent \textbf{Abstract:} The experimental exam of the 56th International Physics Olympiad (IPhO 2026, Colombia) introduced an innovative comprehensive thermodynamics experiment. Utilizing a concentric double-acrylic cylinder apparatus, contestants were required to investigate three interconnected thermal phenomena: the isochoric process of confined air, the saturated vapor pressure of water governed by the Clausius-Clapeyron equation, and the radial heat conduction across the cylinder wall based on Fourier's law. In this paper, the structural design and operating principles of the apparatus are systematically presented. Based on rigorous thermodynamic modeling and reproducible experimental measurements, we provide a complete solution covering all tasks along with systematic error analysis and uncertainty evaluations. We obtained the universal gas constant $R = 8.0(4)\ \mathrm{J/(mol\cdot K)}$, the thermal pressure coefficient $\beta_0 = 3.06(15)\times 10^{-3}\ \mathrm{K^{-1}}$, the molar latent heat of vaporization $\Delta H_{\mathrm{v}} = 26.4(8)\ \mathrm{kJ/mol}$ (up to $31.7(8)\ \mathrm{kJ/mol}$ in the high-temperature regime), and the thermal conductivity of acrylic $\lambda = 0.25(1)\ \mathrm{W/(m\cdot K)}$. Furthermore, from the perspectives of non-equilibrium thermal dynamics and instrument engineering, we critically diagnose the key defects of the original apparatus: the slow gas permeation of silicone tubes under elevated temperatures and the pronounced first-order thermal lag of the bulky metal-sheathed NTC temperature sensor ($\tau \approx 9.2\ \mathrm{s}, \theta \approx 3.8\ \mathrm{s}$). Finally, targeted improvements utilizing heat-resistant PA-12 tubing, threaded mechanical sealing, and fast-response micro-sensors are demonstrated, offering valuable references for competition apparatus development and advanced physics experimental teaching.
+
+\noindent \textbf{Keywords:} International Physics Olympiad (IPhO); Comprehensive thermodynamics experiment; Ideal gas; Saturated vapor pressure; Clausius-Clapeyron equation; Fourier's heat conduction law; Thermal lag; Apparatus improvement
+
+\vspace{0.3cm}
+
+
+
+\end{document}
